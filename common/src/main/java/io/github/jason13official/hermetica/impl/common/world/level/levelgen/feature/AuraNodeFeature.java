@@ -20,6 +20,7 @@ public class AuraNodeFeature extends Feature<NoneFeatureConfiguration> {
     this.node = ModBlocks.AURA_NODE.defaultBlockState();
   }
 
+  @Override
   public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
 
     WorldGenLevel level = context.level();
@@ -30,6 +31,8 @@ public class AuraNodeFeature extends Feature<NoneFeatureConfiguration> {
     if (set && Services.PLATFORM.isDevelopmentEnvironment()) {
       System.out.println("Created new node at " + origin.toShortString());
     }
+
+    AuraNodeFeatureInfo.LOGGER.info("Created new node at " + origin.toShortString());
 
     return set;
   }
