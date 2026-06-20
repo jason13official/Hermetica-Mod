@@ -27,9 +27,11 @@ public class MagicLevelManager {
       thread.setName("hermetica-magic-" + dimension.location());
       thread.start();
       MAGIC_LEVEL_THREADS.put(dimension, magicLevelThread);
-    } else {
-      LOG.info("Attempted to create another magic level thread for {} but it already exists.", dimension.location());
     }
+    // TODO gate this logic
+//    else {
+//      LOG.info("Attempted to create another magic level thread for {} but it already exists.", dimension.location());
+//    }
   }
 
   public static MagicLevel getMagicLevel(ResourceKey<Level> dimension) {
