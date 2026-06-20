@@ -10,6 +10,12 @@ dependencies {
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    implementation group: 'com.electronwill.night-config', name: 'core', version: '3.6.0'
+    implementation group: 'com.electronwill.night-config', name: 'toml', version: '3.6.0'
+
+    include group: 'com.electronwill.night-config', name: 'core', version: '3.6.0'
+    include group: 'com.electronwill.night-config', name: 'toml', version: '3.6.0'
 }
 
 loom {
