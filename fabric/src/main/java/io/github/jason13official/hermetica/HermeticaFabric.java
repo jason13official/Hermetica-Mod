@@ -1,5 +1,6 @@
 package io.github.jason13official.hermetica;
 
+import io.github.jason13official.hermetica.fabric.HermeticaDataAttachments;
 import io.github.jason13official.hermetica.impl.common.registry.ModBlocks;
 import io.github.jason13official.hermetica.impl.common.registry.ModEntities;
 import io.github.jason13official.hermetica.impl.common.registry.ModItems;
@@ -7,9 +8,14 @@ import io.github.jason13official.hermetica.impl.common.registry.ModMenus;
 import io.github.jason13official.hermetica.impl.common.registry.ModParticles;
 import io.github.jason13official.hermetica.impl.common.registry.ModTabs;
 import io.github.jason13official.hermetica.impl.common.registry.ModTiles;
+import io.github.jason13official.hermetica.impl.common.world.level.magic.ambient.MagicLevelEvents;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
@@ -30,8 +36,15 @@ public class HermeticaFabric implements ModInitializer {
     bind(BuiltInRegistries.BLOCK_ENTITY_TYPE, ModTiles::register);
     bind(BuiltInRegistries.MENU, ModMenus::register);
     bind(BuiltInRegistries.CREATIVE_MODE_TAB, ModTabs::register);
+    HermeticaDataAttachments.register();
 
     Hermetica.init();
+
+    ServerWorldEvents.LOAD.register((server, serverLevel) -> MagicLevelEvents.onServerLevelLoad(serverLevel));
+    ServerWorldEvents.UNLOAD.register((server, serverLevel) -> MagicLevelEvents.onServerLevelUnload(serverLevel));
+    ServerChunkEvents.CHUNK_LOAD.register((serverLevel, chunk) -> MagicLevelEvents.onServerChunkLoad(serverLevel, chunk));
+    ServerChunkEvents.CHUNK_UNLOAD.register((serverLevel, chunk) -> MagicLevelEvents.onServerChunkUnload(serverLevel, chunk.getPos()));
+    ServerTickEvents.START_WORLD_TICK.register(serverLevel -> MagicLevelEvents.onServerLevelTickStart(serverLevel));
 
     ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new ResourceReloadListener());
   }

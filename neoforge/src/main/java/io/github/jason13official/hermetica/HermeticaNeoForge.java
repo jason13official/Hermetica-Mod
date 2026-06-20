@@ -7,15 +7,20 @@ import io.github.jason13official.hermetica.impl.common.registry.ModMenus;
 import io.github.jason13official.hermetica.impl.common.registry.ModParticles;
 import io.github.jason13official.hermetica.impl.common.registry.ModTabs;
 import io.github.jason13official.hermetica.impl.common.registry.ModTiles;
+import io.github.jason13official.hermetica.impl.common.world.level.magic.ambient.MagicLevelEvents;
+import io.github.jason13official.hermetica.neoforge.HermeticaDataAttachments;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ChunkLevel;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -23,6 +28,10 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.level.ChunkEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 @Mod(Constants.MOD_ID)
@@ -42,7 +51,43 @@ public class HermeticaNeoForge {
     bind(Registries.MENU, ModMenus::register);
     bind(Registries.CREATIVE_MODE_TAB, ModTabs::register);
 
+    bind(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, HermeticaDataAttachments::register);
+
     EVENT_BUS.addListener((Consumer<FMLCommonSetupEvent>) event -> Hermetica.init());
+
+    NeoForge.EVENT_BUS.addListener((Consumer<LevelEvent.Load>) event -> {
+      if (event.getLevel() instanceof ServerLevel serverLevel) {
+        MagicLevelEvents.onServerLevelLoad(serverLevel);
+      }
+    });
+
+    NeoForge.EVENT_BUS.addListener((Consumer<LevelEvent.Unload>) event -> {
+      if (event.getLevel() instanceof ServerLevel serverLevel) {
+        MagicLevelEvents.onServerLevelUnload(serverLevel);
+      }
+    });
+
+    NeoForge.EVENT_BUS.addListener((Consumer<ChunkEvent.Load>) event -> {
+      if (!(event.getLevel() instanceof ServerLevel serverLevel)
+          || !(event.getChunk() instanceof LevelChunk levelChunk)) {
+        return;
+      }
+      MagicLevelEvents.onServerChunkLoad(serverLevel, levelChunk);
+    });
+
+    NeoForge.EVENT_BUS.addListener((Consumer<ChunkEvent.Unload>) event -> {
+      if (!(event.getLevel() instanceof ServerLevel serverLevel)) {
+        return;
+      }
+      MagicLevelEvents.onServerChunkUnload(serverLevel, event.getChunk().getPos());
+    });
+
+    NeoForge.EVENT_BUS.addListener((Consumer<LevelTickEvent.Pre>) event -> {
+      if (!(event.getLevel() instanceof ServerLevel serverLevel)) {
+        return;
+      }
+      MagicLevelEvents.onServerLevelTickStart(serverLevel);
+    });
 
     NeoForge.EVENT_BUS.addListener((Consumer<AddReloadListenerEvent>) event -> {
       event.addListener(new ResourceReloadListener());

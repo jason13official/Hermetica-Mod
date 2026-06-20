@@ -1,4 +1,4 @@
-package io.github.jason13official.hermetica.impl.common.world.level.aura;
+package io.github.jason13official.hermetica.impl.common.world.level.magic.ambient;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -19,7 +19,7 @@ public class ModBlocks {
     VESTIGIAL_TOWER_HEART = construct("vestigial_tower_heart", p -> new TowerHeartBlock(false, p), Properties.of(), consumer);
   }
 
-  private static Block construct(String name, Function<Properties, Block> constructor, Properties properties,  BiConsumer<Block, ResourceLocation> consumer) {
+  private static Block construct(String name, Function<Properties, Block> constructor, Properties properties, BiConsumer<Block, ResourceLocation> consumer) {
 
     ResourceLocation id = Hermetica.identifier(name);
     Block block = constructor.apply(properties);
