@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hermetica:block/aura_node"
+    }
+  }
+}

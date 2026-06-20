@@ -2,9 +2,12 @@ package io.github.jason13official.hermetica;
 
 import io.github.jason13official.hermetica.impl.client.gui.HermeticaHUD;
 import io.github.jason13official.hermetica.impl.common.network.packet.MagicChunkS2CPacket;
+import io.github.jason13official.hermetica.impl.common.registry.ModBlocks;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.client.renderer.RenderType;
 
 public class HermeticaClientFabric implements ClientModInitializer {
 
@@ -19,6 +22,8 @@ public class HermeticaClientFabric implements ClientModInitializer {
     });
 
     HermeticaClient.postInit();
+
+    BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.AURA_NODE, RenderType.cutout());
 
     HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
       HermeticaHUD.renderOverlay(drawContext, tickCounter);

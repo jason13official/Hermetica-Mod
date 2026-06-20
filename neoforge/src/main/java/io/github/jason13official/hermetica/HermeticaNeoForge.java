@@ -3,6 +3,7 @@ package io.github.jason13official.hermetica;
 import io.github.jason13official.hermetica.impl.common.network.packet.MagicChunkS2CPacket;
 import io.github.jason13official.hermetica.impl.common.registry.ModBlocks;
 import io.github.jason13official.hermetica.impl.common.registry.ModEntities;
+import io.github.jason13official.hermetica.impl.common.registry.ModFeatures;
 import io.github.jason13official.hermetica.impl.common.registry.ModItems;
 import io.github.jason13official.hermetica.impl.common.registry.ModMenus;
 import io.github.jason13official.hermetica.impl.common.registry.ModParticles;
@@ -57,6 +58,7 @@ public class HermeticaNeoForge {
     bind(Registries.PARTICLE_TYPE, ModParticles::register);
     bind(Registries.BLOCK_ENTITY_TYPE, ModTiles::register);
     bind(Registries.MENU, ModMenus::register);
+    bind(Registries.FEATURE, ModFeatures::register);
     bind(Registries.CREATIVE_MODE_TAB, ModTabs::register);
     bind(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, HermeticaDataAttachments::register);
 

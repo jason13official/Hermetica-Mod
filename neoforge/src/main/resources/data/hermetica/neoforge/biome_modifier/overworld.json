@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#c:is_overworld",
+  "features": "hermetica:aura_node_feature",
+  "step": "surface_structures"
+}

@@ -4,6 +4,7 @@ import io.github.jason13official.hermetica.fabric.HermeticaDataAttachments;
 import io.github.jason13official.hermetica.impl.common.network.packet.MagicChunkS2CPacket;
 import io.github.jason13official.hermetica.impl.common.registry.ModBlocks;
 import io.github.jason13official.hermetica.impl.common.registry.ModEntities;
+import io.github.jason13official.hermetica.impl.common.registry.ModFeatures;
 import io.github.jason13official.hermetica.impl.common.registry.ModItems;
 import io.github.jason13official.hermetica.impl.common.registry.ModMenus;
 import io.github.jason13official.hermetica.impl.common.registry.ModParticles;
@@ -14,6 +15,8 @@ import io.github.jason13official.hermetica.impl.common.world.level.magic.ambient
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -23,9 +26,11 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 
 public class HermeticaFabric implements ModInitializer {
 
@@ -43,8 +48,10 @@ public class HermeticaFabric implements ModInitializer {
     bind(BuiltInRegistries.PARTICLE_TYPE, ModParticles::register);
     bind(BuiltInRegistries.BLOCK_ENTITY_TYPE, ModTiles::register);
     bind(BuiltInRegistries.MENU, ModMenus::register);
+    bind(BuiltInRegistries.FEATURE, ModFeatures::register);
     bind(BuiltInRegistries.CREATIVE_MODE_TAB, ModTabs::register);
     HermeticaDataAttachments.register();
+    BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), Decoration.SURFACE_STRUCTURES, ModFeatures.NODE_FEATURE_KEY);
 
     Hermetica.postInit();
 
