@@ -1,6 +1,7 @@
 package io.github.jason13official.hermetica.impl.common.world.level.magic.ambient;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
@@ -48,5 +49,24 @@ public class MagicLevelHandler {
     if (magicLevel != null) {
       magicLevel.getMagicChunks().remove(new ChunkPos(x, z));
     }
+  }
+
+  public static MagicChunkData getMagicChunkdata(ResourceKey<Level> dimension, BlockPos blockPos) {
+    MagicChunk auraChunk = getMagicChunk(dimension, blockPos);
+    return new MagicChunkData(auraChunk.getBase(), auraChunk.getThaum(), auraChunk.getVorp());
+  }
+
+  public static MagicChunk getMagicChunk(ResourceKey<Level> dimension, BlockPos pos) {
+
+    // 'x >> 4' == 'x / 16'
+    // right-shift by 4 is faster integer division by 16,
+    // converting a block position to a chunk position
+
+    return getMagicChunk(dimension, pos.getX() >> 4, pos.getZ() >> 4);
+  }
+
+  public static MagicChunk getMagicChunk(ResourceKey<Level> dimension, int x, int z) {
+    MagicLevel auraLevel = MagicLevelManager.MAGIC_LEVELS.get(dimension);
+    return auraLevel != null ? auraLevel.getMagicChunk(x, z) : null;
   }
 }

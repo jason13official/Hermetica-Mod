@@ -10,6 +10,7 @@ import io.github.jason13official.hermetica.impl.common.registry.ModParticles;
 import io.github.jason13official.hermetica.impl.common.registry.ModTabs;
 import io.github.jason13official.hermetica.impl.common.registry.ModTiles;
 import io.github.jason13official.hermetica.impl.common.world.level.magic.ambient.MagicLevelEvents;
+import io.github.jason13official.hermetica.impl.common.world.level.magic.ambient.MagicLevelHandler;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.fabricmc.api.ModInitializer;
@@ -52,6 +53,18 @@ public class HermeticaFabric implements ModInitializer {
     ServerChunkEvents.CHUNK_LOAD.register((serverLevel, chunk) -> MagicLevelEvents.onServerChunkLoad(serverLevel, chunk));
     ServerChunkEvents.CHUNK_UNLOAD.register((serverLevel, chunk) -> MagicLevelEvents.onServerChunkUnload(serverLevel, chunk.getPos()));
     ServerTickEvents.START_WORLD_TICK.register(serverLevel -> MagicLevelEvents.onServerLevelTickStart(serverLevel));
+
+    ServerTickEvents.START_SERVER_TICK.register(server -> {
+
+      if (server.overworld().getGameTime() % 20 != 0) {
+        return;
+      }
+
+      server.getPlayerList().getPlayers().forEach(player -> {
+        var p = new MagicChunkS2CPacket(MagicLevelHandler.getMagicChunkdata(player.level().dimension(), player.blockPosition()));
+        Hermetica.s2c.accept(player, p);
+      });
+    });
 
     ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new ResourceReloadListener());
   }

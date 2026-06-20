@@ -9,6 +9,7 @@ import io.github.jason13official.hermetica.impl.common.registry.ModParticles;
 import io.github.jason13official.hermetica.impl.common.registry.ModTabs;
 import io.github.jason13official.hermetica.impl.common.registry.ModTiles;
 import io.github.jason13official.hermetica.impl.common.world.level.magic.ambient.MagicLevelEvents;
+import io.github.jason13official.hermetica.impl.common.world.level.magic.ambient.MagicLevelHandler;
 import io.github.jason13official.hermetica.neoforge.HermeticaDataAttachments;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -16,6 +17,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -31,6 +33,7 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -99,6 +102,20 @@ public class HermeticaNeoForge {
         return;
       }
       MagicLevelEvents.onServerLevelTickStart(serverLevel);
+    });
+
+    NeoForge.EVENT_BUS.addListener((Consumer<ServerTickEvent.Pre>) event -> {
+
+      MinecraftServer server = event.getServer();
+
+      if (server.overworld().getGameTime() % 20 != 0) {
+        return;
+      }
+
+      server.getPlayerList().getPlayers().forEach(player -> {
+        var p = new MagicChunkS2CPacket(MagicLevelHandler.getMagicChunkdata(player.level().dimension(), player.blockPosition()));
+        Hermetica.s2c.accept(player, p);
+      });
     });
 
     NeoForge.EVENT_BUS.addListener((Consumer<AddReloadListenerEvent>) event -> {
