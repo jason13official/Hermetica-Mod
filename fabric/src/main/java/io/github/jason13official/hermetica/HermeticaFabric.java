@@ -1,6 +1,7 @@
 package io.github.jason13official.hermetica;
 
 import io.github.jason13official.hermetica.fabric.HermeticaDataAttachments;
+import io.github.jason13official.hermetica.impl.common.network.packet.MagicChunkS2CPacket;
 import io.github.jason13official.hermetica.impl.common.registry.ModBlocks;
 import io.github.jason13official.hermetica.impl.common.registry.ModEntities;
 import io.github.jason13official.hermetica.impl.common.registry.ModItems;
@@ -13,9 +14,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
@@ -29,6 +31,11 @@ public class HermeticaFabric implements ModInitializer {
   @Override
   public void onInitialize() {
 
+    Hermetica.preInit();
+
+    Hermetica.s2c = ServerPlayNetworking::send;
+    PayloadTypeRegistry.playS2C().register(MagicChunkS2CPacket.TYPE, MagicChunkS2CPacket.STREAM_CODEC);
+
     bind(BuiltInRegistries.BLOCK, ModBlocks::register);
     bind(BuiltInRegistries.ENTITY_TYPE, ModEntities::register);
     bind(BuiltInRegistries.ITEM, ModItems::register);
@@ -38,7 +45,7 @@ public class HermeticaFabric implements ModInitializer {
     bind(BuiltInRegistries.CREATIVE_MODE_TAB, ModTabs::register);
     HermeticaDataAttachments.register();
 
-    Hermetica.init();
+    Hermetica.postInit();
 
     ServerWorldEvents.LOAD.register((server, serverLevel) -> MagicLevelEvents.onServerLevelLoad(serverLevel));
     ServerWorldEvents.UNLOAD.register((server, serverLevel) -> MagicLevelEvents.onServerLevelUnload(serverLevel));

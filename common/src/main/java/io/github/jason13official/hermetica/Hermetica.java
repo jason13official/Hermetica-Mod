@@ -1,10 +1,21 @@
 package io.github.jason13official.hermetica;
 
+import java.util.function.BiConsumer;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
 public class Hermetica {
 
-  public static void init() {
+  /// general purpose server-to-client packet acceptor
+  public static BiConsumer<ServerPlayer, CustomPacketPayload> s2c;
+
+  /// before game objects are registered
+  public static void preInit() {
+  }
+
+  /// after game objects are registered
+  public static void postInit() {
   }
 
   public static ResourceLocation identifier(final String path) {

@@ -1,5 +1,6 @@
 package io.github.jason13official.hermetica;
 
+import io.github.jason13official.hermetica.impl.common.network.packet.MagicChunkS2CPacket;
 import io.github.jason13official.hermetica.impl.common.registry.ModBlocks;
 import io.github.jason13official.hermetica.impl.common.registry.ModEntities;
 import io.github.jason13official.hermetica.impl.common.registry.ModItems;
@@ -15,7 +16,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ChunkLevel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -31,6 +31,9 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
@@ -43,6 +46,8 @@ public class HermeticaNeoForge {
 
     EVENT_BUS = modEventBus;
 
+    Hermetica.preInit();
+
     bind(Registries.BLOCK, ModBlocks::register);
     bind(Registries.ENTITY_TYPE, ModEntities::register);
     bind(Registries.ITEM, ModItems::register);
@@ -50,10 +55,17 @@ public class HermeticaNeoForge {
     bind(Registries.BLOCK_ENTITY_TYPE, ModTiles::register);
     bind(Registries.MENU, ModMenus::register);
     bind(Registries.CREATIVE_MODE_TAB, ModTabs::register);
-
     bind(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, HermeticaDataAttachments::register);
 
-    EVENT_BUS.addListener((Consumer<FMLCommonSetupEvent>) event -> Hermetica.init());
+    EVENT_BUS.addListener((Consumer<FMLCommonSetupEvent>) event -> Hermetica.postInit());
+
+    Hermetica.s2c = PacketDistributor::sendToPlayer;
+    modEventBus.addListener((Consumer<RegisterPayloadHandlersEvent>) event -> {
+      PayloadRegistrar registrar = event.registrar("1");
+      registrar.playToClient(MagicChunkS2CPacket.TYPE, MagicChunkS2CPacket.STREAM_CODEC, (payload, context) -> {
+        MagicChunkS2CPacket.handle(payload);
+      });
+    });
 
     NeoForge.EVENT_BUS.addListener((Consumer<LevelEvent.Load>) event -> {
       if (event.getLevel() instanceof ServerLevel serverLevel) {
