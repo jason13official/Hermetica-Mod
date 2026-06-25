@@ -1,6 +1,7 @@
 package io.github.jason13official.hermetica.impl.common.registry;
 
 import io.github.jason13official.hermetica.Hermetica;
+import io.github.jason13official.hermetica.impl.common.block.AuraNodeBlock;
 import io.github.jason13official.hermetica.impl.common.block.TowerHeartBlock;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -22,7 +23,7 @@ public class ModBlocks {
     TOWER_HEART = construct("tower_heart", p -> new TowerHeartBlock(true, p), Properties.of(), consumer);
     VESTIGIAL_TOWER_HEART = construct("vestigial_tower_heart", p -> new TowerHeartBlock(false, p), Properties.of(), consumer);
 
-    AURA_NODE = construct("aura_node", VanillaTransparentBlock::new, BlockBehaviour.Properties.of().noCollission().noOcclusion(), consumer);
+    AURA_NODE = construct("aura_node", AuraNodeBlock::new, BlockBehaviour.Properties.of().noCollission().noOcclusion(), consumer);
   }
 
   private static Block construct(String name, Function<Properties, Block> constructor, Properties properties, BiConsumer<Block, ResourceLocation> consumer) {
@@ -34,6 +35,7 @@ public class ModBlocks {
     return block;
   }
 
+  /// literally just widens access of the constructor
   public static class VanillaTransparentBlock extends TransparentBlock {
 
     public VanillaTransparentBlock(Properties properties) {

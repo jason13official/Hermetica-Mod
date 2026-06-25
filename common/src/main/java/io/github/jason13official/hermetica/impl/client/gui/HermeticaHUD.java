@@ -1,11 +1,20 @@
 package io.github.jason13official.hermetica.impl.client.gui;
 
+import io.github.jason13official.hermetica.impl.common.registry.ModBlocks;
+import io.github.jason13official.hermetica.impl.common.registry.ModItems;
 import io.github.jason13official.hermetica.impl.common.world.level.magic.ambient.MagicChunkData;
+import java.util.function.Supplier;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class HermeticaHUD {
+
+  private static final Supplier<ItemStack> DISPLAY_WRITABLE_BOOK = () -> new ItemStack(Items.WRITABLE_BOOK);
+  private static final Supplier<ItemStack> DISPLAY_OBSERVATION_JOURNAL = () -> new ItemStack(ModItems.OBSERVATION_JOURNAL);
 
   public static MagicChunkData lastChunkData = MagicChunkData.DEFAULT;
 
@@ -13,8 +22,32 @@ public class HermeticaHUD {
 
     Minecraft mc = Minecraft.getInstance();
 
+    if (mc.player == null || mc.level == null) {
+      return;
+    }
+
     if (mc.options.hideGui) {
       return;
+    }
+
+    // ignore non block hit results
+    if (mc.hitResult instanceof BlockHitResult bhr) {
+
+      // are we looking at an aura node
+      boolean playerLookingAtAuraNode = mc.level.getBlockState(bhr.getBlockPos()).is(ModBlocks.AURA_NODE);
+
+      // end the if statement early, if we're not looking at an aura node,
+      // otherwise check against player tag
+      if (!playerLookingAtAuraNode) return;
+      int centerX = (guiGraphics.guiWidth() - 16) / 2;
+      int centerY = (guiGraphics.guiHeight() - 16) / 2;
+      if (!mc.player.getTags().contains("HermeticaFirstJournal")) {
+        // positive x to the right, positive y down
+        guiGraphics.renderFakeItem(DISPLAY_WRITABLE_BOOK.get(), centerX - 16, centerY + 16); // down left from crosshair
+        guiGraphics.renderFakeItem(DISPLAY_OBSERVATION_JOURNAL.get(), centerX + 16, centerY + 16); // down right from crosshair
+      } else if (!mc.player.getTags().contains("ObservedAuraNode")) {
+        guiGraphics.renderFakeItem(DISPLAY_OBSERVATION_JOURNAL.get(), centerX, centerY + 16); // down from crosshair
+      }
     }
 
     guiGraphics.drawString(mc.font, "HUD OVERLAY FROM HERMETICA", 5, 5, 0xAAFFFFFF);

@@ -1,9 +1,16 @@
 {
   "itemGroup.hermetica": "Hermetica",
 
+  "item.hermetica.observation_journal": "Observation Journal",
+
   "block.hermetica.tower_heart": "Tower Heart",
   "item.hermetica.tower_heart": "Tower Heart",
 
   "block.hermetica.vestigial_tower_heart": "Vestigial Tower Heart",
-  "item.hermetica.vestigial_tower_heart": "Vestigial Tower Heart"
+  "item.hermetica.vestigial_tower_heart": "Vestigial Tower Heart",
+
+  "block.hermetica.aura_node": "Aura Node",
+  "item.hermetica.aura_node": "Aura Node",
+
+  "lore.hermetica.aura_node_observation": "You observed an Aura Node for the first time."
 }

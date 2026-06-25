@@ -13,6 +13,8 @@ public class ModItems {
 
   public static final ArrayList<Item> REGISTERED_ITEMS = new ArrayList<>();
 
+  public static Item OBSERVATION_JOURNAL;
+
   public static Item TOWER_HEART;
   public static Item VESTIGIAL_TOWER_HEART;
 
@@ -24,6 +26,8 @@ public class ModItems {
   }
 
   private static void registerBlockItems(BiConsumer<Item, ResourceLocation> consumer) {
+
+    OBSERVATION_JOURNAL = construct("observation_journal", Item::new, new Properties().stacksTo(1), consumer);
 
     TOWER_HEART = construct("tower_heart", p -> new BlockItem(ModBlocks.TOWER_HEART, p), new Properties(), consumer);
     VESTIGIAL_TOWER_HEART = construct("vestigial_tower_heart", p -> new BlockItem(ModBlocks.VESTIGIAL_TOWER_HEART, p), new Properties(), consumer);
