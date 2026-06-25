@@ -18,9 +18,6 @@ public class ObservationJournalItem extends Item {
       if (!player.getTags().contains("HermeticaFirstJournal")) {
         player.addTag("HermeticaFirstJournal");
       }
-//      if (!player.getTags().contains("ObservedAuraNode")) {
-//        player.addTag("ObservedAuraNode");
-//      }
     }
   }
 }
