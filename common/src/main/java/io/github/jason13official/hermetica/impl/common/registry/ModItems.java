@@ -1,6 +1,7 @@
 package io.github.jason13official.hermetica.impl.common.registry;
 
 import io.github.jason13official.hermetica.Hermetica;
+import io.github.jason13official.hermetica.impl.common.item.ObservationJournalItem;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -27,7 +28,7 @@ public class ModItems {
 
   private static void registerBlockItems(BiConsumer<Item, ResourceLocation> consumer) {
 
-    OBSERVATION_JOURNAL = construct("observation_journal", Item::new, new Properties().stacksTo(1), consumer);
+    OBSERVATION_JOURNAL = construct("observation_journal", ObservationJournalItem::new, new Properties().stacksTo(1), consumer);
 
     TOWER_HEART = construct("tower_heart", p -> new BlockItem(ModBlocks.TOWER_HEART, p), new Properties(), consumer);
     VESTIGIAL_TOWER_HEART = construct("vestigial_tower_heart", p -> new BlockItem(ModBlocks.VESTIGIAL_TOWER_HEART, p), new Properties(), consumer);
