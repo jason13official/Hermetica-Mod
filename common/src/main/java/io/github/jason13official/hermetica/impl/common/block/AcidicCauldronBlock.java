@@ -6,6 +6,7 @@ import io.github.jason13official.hermetica.impl.common.world.level.magic.cauldro
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractCauldronBlock;
 import net.minecraft.world.level.block.Block;
@@ -57,6 +58,13 @@ public class AcidicCauldronBlock extends AbstractCauldronBlock {
   private static void process(Level level, BlockPos pos, Entity entity) {
     // server side and entity inside bounding box
     if (!level.isClientSide() && entity instanceof ItemEntity itemEntity) {
+      Item rawItem = itemEntity.getItem().getItem();
+
+      // discard items that don't have a direct translation registered
+      if (AcidicCauldronInteraction.BLOCK_BY_ITEM.containsKey(rawItem)) {
+        level.setBlockAndUpdate(pos.above(), AcidicCauldronInteraction.BLOCK_BY_ITEM.get(rawItem).defaultBlockState());
+      }
+
       itemEntity.discard();
     }
   }

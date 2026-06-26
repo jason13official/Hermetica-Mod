@@ -1,5 +1,6 @@
 package io.github.jason13official.hermetica;
 
+import io.github.jason13official.hermetica.impl.common.world.level.magic.cauldron.AcidicCauldronInteraction;
 import java.util.function.BiConsumer;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +17,8 @@ public class Hermetica {
 
   /// after game objects are registered
   public static void postInit() {
+
+    AcidicCauldronInteraction.registerDistillations();
   }
 
   public static ResourceLocation identifier(final String path) {
