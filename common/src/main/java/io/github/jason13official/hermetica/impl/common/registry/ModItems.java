@@ -15,6 +15,7 @@ public class ModItems {
   public static final ArrayList<Item> REGISTERED_ITEMS = new ArrayList<>();
 
   public static Item OBSERVATION_JOURNAL;
+  public static Item ACIDIC_CAULDRON;
 
   public static Item TOWER_HEART;
   public static Item VESTIGIAL_TOWER_HEART;
@@ -34,6 +35,7 @@ public class ModItems {
     VESTIGIAL_TOWER_HEART = construct("vestigial_tower_heart", p -> new BlockItem(ModBlocks.VESTIGIAL_TOWER_HEART, p), new Properties(), consumer);
 
     AURA_NODE = construct("aura_node", p -> new BlockItem(ModBlocks.AURA_NODE, p), new Properties(), consumer);
+    ACIDIC_CAULDRON = construct("acidic_cauldron", p -> new BlockItem(ModBlocks.ACIDIC_CAULDRON, p), new Properties(), consumer);
   }
 
   private static Item construct(String name, Function<Properties, Item> constructor, Properties properties, BiConsumer<Item, ResourceLocation> consumer) {

@@ -12,5 +12,8 @@
   "block.hermetica.aura_node": "Aura Node",
   "item.hermetica.aura_node": "Aura Node",
 
-  "lore.hermetica.aura_node_observation": "You observed an Aura Node for the first time."
+  "lore.hermetica.aura_node_observation": "You observed an Aura Node for the first time.",
+
+  "block.hermetica.acidic_cauldron": "Acidic Cauldron",
+  "item.hermetica.acidic_cauldron": "Acidic Cauldron"
 }
