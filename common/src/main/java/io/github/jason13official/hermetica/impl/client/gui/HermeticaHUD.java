@@ -3,6 +3,7 @@ package io.github.jason13official.hermetica.impl.client.gui;
 import io.github.jason13official.hermetica.impl.common.registry.ModBlocks;
 import io.github.jason13official.hermetica.impl.common.registry.ModItems;
 import io.github.jason13official.hermetica.impl.common.world.level.magic.ambient.MagicChunkData;
+import io.github.jason13official.hermetica.platform.Services;
 import java.util.function.Supplier;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -30,6 +31,10 @@ public class HermeticaHUD {
       return;
     }
 
+    if (Services.PLATFORM.isDevelopmentEnvironment()) {
+      renderDevHudOverlay(guiGraphics, mc);
+    }
+
     // ignore non block hit results
     if (mc.hitResult instanceof BlockHitResult bhr) {
 
@@ -49,7 +54,9 @@ public class HermeticaHUD {
         guiGraphics.renderFakeItem(DISPLAY_OBSERVATION_JOURNAL.get(), centerX, centerY + 16); // down from crosshair
       }
     }
+  }
 
+  private static void renderDevHudOverlay(GuiGraphics guiGraphics, Minecraft mc) {
     guiGraphics.drawString(mc.font, "HUD OVERLAY FROM HERMETICA", 5, 5, 0xAAFFFFFF);
     if (lastChunkData != null) {
       guiGraphics.drawString(mc.font, "Chunk Magic Base: " + lastChunkData.base(), 5, 15, 0xAAFFFFFF);

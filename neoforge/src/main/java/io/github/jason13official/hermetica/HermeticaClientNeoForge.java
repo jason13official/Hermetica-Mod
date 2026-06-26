@@ -41,7 +41,8 @@ public class HermeticaClientNeoForge {
       event.register(new BlockColor() {
                        @Override
                        public int getColor(BlockState blockState, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int i) {
-                         return level != null && pos != null ? BiomeColors.getAverageWaterColor(level, pos) : -1;
+                         // return level != null && pos != null ? BiomeColors.getAverageWaterColor(level, pos) : -1;
+                         return 0xAA00AA00; // transparent green?
                        }
                      },
           ModBlocks.ACIDIC_CAULDRON);
