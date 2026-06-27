@@ -114,7 +114,7 @@ public class AcidicCauldronBlock extends AbstractCauldronBlock implements Entity
     }
   }
   
-  // Tile stuff -----------------------------------------------------------------------------
+  // region Tile methods
 
   @Override
   public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -134,4 +134,6 @@ public class AcidicCauldronBlock extends AbstractCauldronBlock implements Entity
   protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> serverType, BlockEntityType<E> clientType, BlockEntityTicker<? super E> ticker) {
     return clientType == serverType ? (BlockEntityTicker<A>) ticker : null;
   }
+
+  // endregion
 }
